@@ -309,10 +309,10 @@ def read_serial_every_5_mins():
                     if debug==True:
                       logger.info("sleeping finished for empty array")
 
-        except SerialException:
+        except SerialException as e:
             sleep = True
             if debug==True:
-              logger.info("Serial Exception: " + str(exception_count))
+              logger.info("Serial Exception: " + str(e.strerror))
             exception_count = exception_count + 1
 
         except Exception as e:
