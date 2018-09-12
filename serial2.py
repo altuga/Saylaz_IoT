@@ -107,6 +107,7 @@ while True:
         ser = serial.Serial('/dev/ttyS0', 38400)
         ser.flushInput()
         ser.flushOutput()
+        ser.timeout = 10
 
         start_time = time.time()
 
@@ -117,11 +118,11 @@ while True:
         while num < lines:
             ser_bytes = ser.readline()
             str_data = str(ser_bytes, "utf-8")
-            #if str_data =="":
-            #    emptyData = 1
-            #    num += 1
-            #    data.append(str_data)
-            #    logger.info("Empty data")
+            if str_data =="":
+                emptyData = 1
+                num += 1
+                data.append(str_data)
+                #logger.info("Empty data")
             if '[' in str_data:
                 data = [str_data]
                 num = 0
@@ -135,13 +136,17 @@ while True:
 
         str_data = str(data);
 
-        #if emptyData < 1:
+        if emptyData < 1:
 
-        count_serial_pls = str_data[str_data.index('pls=') + 4: str_data.rindex("lamp")]
+            count_serial_pls = str_data[str_data.index('pls=') + 4: str_data.rindex("lamp")]
 
-        count_h20 = str_data[str_data.index('H2O=') + 4: str_data.rindex("bdte")]
+            count_h20 = str_data[str_data.index('H2O=') + 4: str_data.rindex("bdte")]
 
-        logger.info("Chk: " + str(len(str(data))) + " Pls: " + str(count_serial_pls) + " H2O: " + str(count_h20) + " Time: %s " % (time.time() - start_time))
+            logger.info("Chk: " + str(len(str(data))) + " Pls: " + str(count_serial_pls) + " H2O: " + str(count_h20) + " Time: %s " % (time.time() - start_time))
+
+        else :
+
+            logger.info("Empty Data Send")
 
         thread1 = Thread(target=send_data, args=(data,cnt_array))
         thread1.daemon = True
