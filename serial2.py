@@ -144,13 +144,13 @@ while True:
 
             logger.info("Chk: " + str(len(str(data))) + " Pls: " + str(count_serial_pls) + " H2O: " + str(count_h20) + " Time: %s " % (time.time() - start_time))
 
+            thread1 = Thread(target=send_data, args=(data,cnt_array))
+            thread1.daemon = True
+            thread1.start()
+
         else :
 
-            logger.info("Empty Data Send")
-
-        thread1 = Thread(target=send_data, args=(data,cnt_array))
-        thread1.daemon = True
-        thread1.start()
+            logger.info("Empty Data Not Send")
 
         ser.close()
 
